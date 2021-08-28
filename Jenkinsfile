@@ -20,7 +20,7 @@ pipeline {
 
     stage('Upload Docker Image to Repo') {
       steps {
-        withDockerRegistry(credentialsId: 'docker_hub-cred') {
+        withDockerRegistry(credentialsId: 'docker_hub-cred', url: 'https://index.docker.io/v1/') {
     sh "docker push yonibahar/todoapi:${BUILD_ID}"
 }
       }
