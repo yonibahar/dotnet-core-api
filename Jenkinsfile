@@ -20,7 +20,9 @@ pipeline {
 
     stage('Upload Docker Image to Repo') {
       steps {
-        echo 'Hello'
+        withDockerRegistry(credentialsId: 'docker_hub-cred') {
+    sh "docker push yonibahar/todoapi:${BUILD_ID}"
+}
       }
     }
 
