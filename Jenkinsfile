@@ -18,21 +18,21 @@ pipeline {
       }
     }
 
-    stage('Upload Docker Image to Repo') {
+    stage('Run, Test And Upload Docker Image to Repo') {
       parallel {
+        stage('Run And Test the Image') {
+          steps {
+            sh '''docker run -itd -p 80:80 --name todoapi  yonibahar/todoapi:${BUILD_ID};
+sleep 3s; curl localhost:80; docker stop todoapi; docker rm todoapi'''
+          }
+        }
+
         stage('Upload Docker Image to Repo') {
           steps {
             withDockerRegistry(credentialsId: 'docker_hub-cred', url: 'https://index.docker.io/v1/') {
               sh "docker push yonibahar/todoapi:${BUILD_ID}"
             }
 
-          }
-        }
-
-        stage('Run And Test the Image') {
-          steps {
-            sh '''docker run -itd -p 80:80 --name todoapi  yonibahar/todoapi:${BUILD_ID};
-sleep 3s; curl localhost:80; docker stop todoapi; docker rm todoapi'''
           }
         }
 
